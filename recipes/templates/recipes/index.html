@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>List of recipes</title>
+    <script>
+
+    </script> 
+  </head>
+  <body>
+    {% if recipes %}
+      <ul>
+        {% for recipe in recipes %}
+          <li>
+            <a href="{% url 'detail' recipe.id %}">{{ recipe.recipe_name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No recipes are available.</p>
+    {% endif %}
+    <div>
+      <button>
+        <a href="{% url 'new_recipe' %}">New recipe</a>
+      </button>
+    </div>
+  </body>
+</html>

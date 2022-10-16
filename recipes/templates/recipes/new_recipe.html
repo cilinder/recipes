@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>Recipe {{ recipe.id }} details</title>
+  </head>
+  <body>
+    <form action="new_recipe/save" method="post">
+      {% csrf_token %}
+      <fieldset>
+        <label for="recipe_name">Recipe name: </label>
+        <input type="text" name="recipe_name"><br>
+        <label for="duration">Duration [min]: </label>
+        <input type="text" name="duration"><br>
+        <label for="duration">Ingredients (one per line)</label><br>
+        <textarea name="ingredients", rows=5, cols=50></textarea><br>
+        <label for="instructions">Instructions</label><br>
+        <textarea name="instructions", rows=10, cols=100></textarea><br>
+      </fieldset>
+      <input type="submit" value="Save">
+    </form>
+    <button><a href="{% url 'index' %}">Back</a></button>
+  </body>
+</html>
+
+
