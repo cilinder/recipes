@@ -28,8 +28,7 @@ def new_recipe(request):
 
 def save_recipe(request):
     data = request.POST
-    print("Image: ", data["image"])
-    if (data["image"]):
+    if ("image" in data):
         image = UploadImage.objects.get(pk=data["image"])
         recipe = Recipe(
             recipe_name=data["recipe_name"],
