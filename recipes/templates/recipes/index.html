@@ -2,20 +2,26 @@
 
 {% block content %}
 
-  <h1>Recipes</h1>
+<div class="flex flex-col items-center">
+  <h1 class="text-8xl font-bold text-center font-serif">Recipes</h1>
   {% if recipes %}
-    <ul class="recipe-list">
+    <ul class="columns-1 m-8 w-3/4 divide-y divide-sky-500 bg-white shadow">
       {% for recipe in recipes %}
-        <li>
-          <a href="{% url 'detail' recipe.id %}">{{ recipe.recipe_name }}</a>
+        <li class="flex justify-center">
+          <a class="block w-full
+                  hover:bg-sky-400 hover:text-white text-center text-2xl 
+                    py-2 capitalize font-semibold" 
+            href="{% url 'detail' recipe.id %}">{{ recipe.recipe_name }}</a>
         </li>
       {% endfor %}
     </ul>
   {% else %}
-    <p>No recipes are available.</p>
+    <div class="columns-1 p-8">
+      <p class="text-center">No recipes are available.</p>
+    </div>
   {% endif %}
   <div>
-    <button>
+    <button class="btn btn-blue shadow-md">
       <a href="{% url 'new_recipe' %}">New recipe</a>
     </button>
   </div>

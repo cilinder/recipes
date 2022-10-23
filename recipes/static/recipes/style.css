@@ -2,45 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-.recipe-list {
-  padding: 1em;
-  margin-left: 1em;
-  width: 10rem;
-  list-style-type: none;
+.btn {
+  @apply font-bold py-2 px-4 rounded;
 }
-
-li a {
-  display: block;
-  width: 100%;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: larger;
-  text-decoration: none;
-  border: 1px solid rgba(117, 116, 117, 0.32);
-  padding: 0.3em;
-  color: black;
+.btn-blue {
+  @apply bg-blue-500 text-white;
 }
-
-li a:hover {
-  cursor: pointer;
-  background-color: rgba(49, 152, 225, 0.32);
-}
-
-button a {
-  text-decoration: none;
-  color: black;
-}
-
-.details-buttons {
-  display: flex;
-  width: 20rem;
-  justify-content: space-between;
-}
-
-.instructions {
-  width: 40rem;
-}
-
-.upload-recipe-image {
-  min-height: 300px;
-  border: 1px solid gray;
+.btn-blue:hover {
+  @apply bg-blue-700;
 }

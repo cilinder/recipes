@@ -1,43 +1,31 @@
+{% extends "recipes/base.html" %}
 
-<!DOCTYPE html>
-<html lang="en-US">
-  <head>
-    <meta charset="utf-8" />
-    <title>Recipe {{ recipe.id }} details</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'recipes/style.css' %}">    
-    <script>
-      function askForDelete() {
-        if (confirm("Are you sure you want to delete this recipe?!!")) {
-          window.location.href="{% url 'delete_recipe' recipe.id %}";
-        }
-      }
-    </script>
-  </head>
-  <body>
-    <h1>{{ recipe.recipe_name }}</h1>
-    {% if recipe.image %}
-      <img src="{{ recipe.image.image.url }}" alt="image not found" style="max-height:200px">
-    {% endif %}
-    <div>
-      <span><b>Duration:</b> {{ recipe.esstimated_duration_minutes }} min</span>
-    </div>
-    <div>
-      <h3>Ingredients: </h3>
-      <ul>
-        {% for ingredient in ingredients %}
-          <li>{{ ingredient }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    <div>
-      <h3>Instructions: </h3>
-      <p class="instructions">{{ recipe.instructions }}</p>
-    </div>
-    <div class="details-buttons">
-      <button><a href="{% url 'index' %}">Home</a></button>
-      <button><a href="{% url 'edit_recipe' recipe.id %}">Edit recipe</a></button>
-      <button onclick="askForDelete()">Delete Recipe</button>
-    </div>
-  </body>
-</html>
+{% block content %}
+<div class="flex flex-col items-center gap-y-4">
+  <h1 class="text-5xl font-bold text-center font-serif pb-4">{{ recipe.recipe_name }}</h1>
+  {% if recipe.image %}
+    <img class="w-3/4" src="{{ recipe.image.image.url }}" alt="image not found">
+  {% endif %}
+  <div class="w-3/4 text-2xl">
+    <span class="font-bold">Duration:</span> {{ recipe.esstimated_duration_minutes }} minutes
+  </div>
+  <div class="w-3/4">
+    <h3 class="text-2xl font-bold">Ingredients: </h3>
+    <ul class="list-disc pl-5 py-5 text-lg">
+      {% for ingredient in ingredients %}
+        <li>{{ ingredient }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="w-3/4 pb-5">
+    <h3 class="text-2xl font-bold pb-5">Instructions: </h3>
+    <p class="text-lg">{{ recipe.instructions }}</p>
+  </div>
+  <div>
+    <button class="btn btn-blue"><a href="{% url 'index' %}">Home</a></button>
+    <button class="btn btn-blue"><a href="{% url 'edit_recipe' recipe.id %}">Edit recipe</a></button>
+    <button class="btn btn-blue" onclick=askForDelete({{recipe.id}})>Delete Recipe</button>
+  </div>
+</div>
+  
+{% endblock %}

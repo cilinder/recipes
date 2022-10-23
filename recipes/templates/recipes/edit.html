@@ -7,7 +7,7 @@
   <form action={% url 'edit_recipe' recipe.id %} method="post" enctype="multipart/form-data">
     {% csrf_token %}  
     {{ form.as_p }}
-    <button type="submit">Upload</button>
+    <button class="btn btn-blue" type="submit">Upload</button>
   </form>
   
   {% if img_obj %}
@@ -40,9 +40,9 @@
       <input type="hidden" name="image" value={{img_obj.id}}><br>
     {% endif %}
   </fieldset>
-  <input type="submit" value="Save">
+  <input class="btn btn-blue" type="submit" value="Save">
 </form>
-<button><a href="{% url 'index' %}">Back</a></button>
+<button class="btn btn-blue"><a href="{% url 'index' %}">Back</a></button>
 
 {% endblock %}
 
