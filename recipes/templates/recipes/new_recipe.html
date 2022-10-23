@@ -1,36 +1,41 @@
 {% extends "recipes/base.html" %}
 
 {% block content %}
-<div class="upload-recipe-image">
-  <h2>Upload an image of your recipe</h2>
-  <form action={% url 'new_recipe' %} method="post" enctype="multipart/form-data">
-    {% csrf_token %}  
-    {{ form.as_p }}  
-    <button class="btn btn-blue" type="submit">Upload</button>
-  </form>  
+<h2 class="text-5xl font-bold text-center font-serif mb-6">Create a new recipe</h2>
+<div class="flex flex-row justify-center">
+  <div class="w-96">
+    <form action="new_recipe/save" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <fieldset>
+        <label for="recipe_name">Recipe name: </label>
+        <input type="text" name="recipe_name"><br>
+        <label for="duration">Duration [min]: </label>
+        <input type="text" name="duration"><br>
+        <label for="duration">Ingredients (one per line)</label><br>
+        <textarea class="w-96" name="ingredients"></textarea><br>
+        <label for="instructions">Instructions</label><br>
+        <textarea class="w-96" name="instructions"></textarea><br>
+        {% if img_obj %}  
+          <input type="hidden" name="image" value={{img_obj.id}}><br>
+        {% endif %}
+      </fieldset>
+      <input class="btn btn-blue" type="submit" value="Save recipe">
+    </form>
+  </div>
+  <div class="w-96">
+    <h3 class="text-4xl mb-4">Picture</h3>
+    <form action={% url 'new_recipe' %} method="post" enctype="multipart/form-data">
+      {% csrf_token %}  
+      {{ form.as_p }}  
+      <button class="btn btn-blue shadow-md" type="submit">Upload</button>
+    </form>  
 
-  {% if img_obj %}  
-    <h3>Image: {{img_obj.caption}}</h3>  
-    <img src="{{ img_obj.image.url}}" alt="image not found" style="max-height:200px">  
-  {% endif %}
-</div>
-<form action="new_recipe/save" method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <fieldset>
-    <label for="recipe_name">Recipe name: </label>
-    <input type="text" name="recipe_name"><br>
-    <label for="duration">Duration [min]: </label>
-    <input type="text" name="duration"><br>
-    <label for="duration">Ingredients (one per line)</label><br>
-    <textarea name="ingredients", rows=5, cols=50></textarea><br>
-    <label for="instructions">Instructions</label><br>
-    <textarea name="instructions", rows=10, cols=100></textarea><br>
-    {% if img_obj %}  
-      <input type="hidden" name="image" value={{img_obj.id}}><br>
+    {% if img_obj %}
+      <h3>Image: {{img_obj.caption}}</h3>  
+      <img src="{{ img_obj.image.url}}" alt="image not found" style="max-height:200px">  
     {% endif %}
-  </fieldset>
-  <input class="btn btn-blue" type="submit" value="Save recipe">
-</form>
+  </div>
+</div>
 
 <button class="btn btn-blue"><a href="{% url 'index' %}">Back</a></button>
 

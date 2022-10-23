@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="flex flex-col items-center gap-y-4">
-  <h1 class="text-5xl font-bold text-center font-serif pb-4">{{ recipe.recipe_name }}</h1>
+  <h2 class="text-5xl font-bold text-center font-serif pb-4">{{ recipe.recipe_name }}</h2>
   {% if recipe.image %}
     <img class="w-3/4" src="{{ recipe.image.image.url }}" alt="image not found">
   {% endif %}
