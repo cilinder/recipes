@@ -129,8 +129,12 @@ dmypy.json
 .pyre/
 
 
+# Static files generated
 static
+# Media files uploaded by users
+media
 
 # Typescript
-
 frontend/node_modules
+
+
