@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render  
 from .forms import UserImage  
-from .models import UploadImage  
+from .models import Ingredient, UploadImage  
 
 from .models import Recipe
 
@@ -12,8 +12,9 @@ def index(request):
 
 def detail(request, recipe_id):
     recipe = Recipe.objects.get(pk=recipe_id)
-    ingredients = recipe.ingredients.split(', ')
-    context = {'recipe': recipe, 'ingredients': ingredients}
+    # ingredients = recipe.ingredients.split(', ')
+    context = {'recipe': recipe, 'ingredients': recipe.ingredient_set.all()}
+    # context = {'recipe': recipe}
     return render(request, 'recipes/detail.html', context)
 
 def new_recipe(request):
@@ -55,14 +56,16 @@ def delete_recipe(request, recipe_id):
 
 def edit_recipe(request, recipe_id):
     recipe = Recipe.objects.get(pk=recipe_id)
+    ingredients = recipe.ingredient_set.all()
+    print(ingredients)
     if request.method == 'POST':
         print("HERE editing")
         form = UserImage(request.POST, request.FILES)
         form.save()
         img_object = form.instance
-        return render(request, 'recipes/edit.html', {'recipe': recipe, 'form': form, 'img_obj': img_object})  
+        return render(request, 'recipes/edit.html', {'recipe': recipe, 'form': form, 'img_obj': img_object, 'ingredients': ingredients})  
     form = UserImage()
-    context = {'recipe': recipe, 'form': form}
+    context = {'recipe': recipe, 'form': form, 'ingredients': ingredients}
     return render(request, 'recipes/edit.html', context)
 
 def update_recipe(request, recipe_id):
@@ -70,13 +73,28 @@ def update_recipe(request, recipe_id):
     recipe = Recipe.objects.get(pk=recipe_id)
     recipe.recipe_name=data["recipe_name"]
     recipe.esstimated_duration_minutes=data["duration"]
-    recipe.ingredients=", ".join(data["ingredients"].split("\n"))
+    # ingredients = recipe.ingredient_set.all()
+    print(data.keys())
+    ingredient_ids = [k.split("_")[-1] for k in data if "ing_name" in k]
+    for ing_id in ingredient_ids:
+        ing_name = data[f"ing_name_{ing_id}"]
+        ing_qty = data[f"ing_qty_{ing_id}"]
+        ing_unit = data[f"ing_unit_{ing_id}"]
+        try:
+            ingredient = Ingredient.objects.get(pk=ing_id)
+            ingredient.name = ing_name
+            ingredient.quantity = ing_qty
+            ingredient.unit = ing_unit
+        except:
+            ingredient = Ingredient(name=ing_name, quantity=ing_qty, unit = ing_unit, recipe=recipe)
+        ingredient.save()
+
     recipe.instructions=data["instructions"]
-    if data["image"]:
+    if "image" in data:
         image = UploadImage.objects.get(pk=data["image"])
         recipe.image=image
     recipe.save()
-    return HttpResponseRedirect("/recipes")
+    return HttpResponseRedirect(f"/recipes/{recipe.id}")
 
 def image_request(request):  
     if request.method == 'POST':  
