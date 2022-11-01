@@ -2,31 +2,31 @@
 
 {% block content %}
 <h2 class="text-5xl font-bold text-center font-serif mb-6">Edit recipe</h2>
-<div class="grid grid-cols-1 lg:grid-cols-2 mx-auto lg:w-8/12">
+<div class="grid grid-cols-1 lg:grid-cols-1 mx-auto lg:w-8/12">
   <div class="lg:w-1/2 m-4">
     <form action={% url 'update_recipe' recipe.id %} method="post">
       {% csrf_token %}
-      <fieldset class="space-y-2">
+      <fieldset>
         <label for="recipe_name">Recipe name: </label><br>
-        <input  class="w-full shadow" type="text" name="recipe_name" value={{ recipe.recipe_name }}><br>
+        <input  class="shadow" type="text" name="recipe_name" value={{ recipe.recipe_name }}><br>
         <label for="duration">Duration [min]: </label><br>
-        <input  class="w-full shadow" type="text" name="duration" value={{ recipe.esstimated_duration_minutes }}><br>
+        <input  class="shadow mb-2" type="text" name="duration" value={{ recipe.esstimated_duration_minutes }}><br>
         <label for="duration">Ingredients</label><br>
-        <div class="flex justify-around">
+        <div class="flex flex-row justify-around mb-2">
           <div>Name</div>
           <div>Quantity</div>
           <div>Unit</div>
         </div>
         {% for ingredient in ingredients %}
-          <div class="flex flex-row justify-around">
+          <div class="flex flex-row justify-around space-x-4 mb-2">
             <input class="shadow" type="text" name="ing_name_{{ingredient.id}}" value={{ ingredient.name }}>
             <input class="shadow" type="number" name="ing_qty_{{ingredient.id}}" value={{ ingredient.quantity }}>
             <input class="shadow border-b-2" type="text" name="ing_unit_{{ingredient.id}}" value={{ ingredient.unit }}>
           </div>
         {% endfor %}
         {% comment %} Add new ingredients {% endcomment %}
-        <label class="mt-2">Add new ingredient</label>
-        <div class="mt-2 flex flex-row justify-around">
+        <label>Add new ingredient</label>
+        <div class="my-2 flex flex-row justify-around space-x-4">
           <input class="shadow" type="text" name="name_new">
           <input class="shadow" type="number" name="qty_new">
           <input class="shadow border-b-2" type="text" name="unit_new">
@@ -42,7 +42,7 @@
       <button class="btn btn-blue shadow-md mt-4"><a href="{% url 'detail' recipe.id %}">Back</a></button>
     </form>
   </div>
-  <div class="lg:w-1/2 m-4">
+  <div class="w-full lg:w-1/2 m-4">
     <h2>Upload an image of your recipe</h2>
     <form action={% url 'edit_recipe' recipe.id %} method="post" enctype="multipart/form-data">
       {% csrf_token %}  
