@@ -89,6 +89,11 @@ def update_recipe(request, recipe_id):
             ingredient = Ingredient(name=ing_name, quantity=ing_qty, unit = ing_unit, recipe=recipe)
         ingredient.save()
 
+    if "name_new" in data and len(data["name_new"]) > 0:
+        new_ingredient = Ingredient(name=data["name_new"], quantity=data["qty_new"], unit=data["unit_new"], recipe=recipe)
+        print("Saving new ingredient")
+        new_ingredient.save()
+
     recipe.instructions=data["instructions"]
     if "image" in data:
         image = UploadImage.objects.get(pk=data["image"])

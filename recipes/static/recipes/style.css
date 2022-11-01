@@ -11,3 +11,7 @@
 .btn-blue:hover {
   @apply bg-blue-700;
 }
+
+.test {
+  justify-content: space-around;
+}
