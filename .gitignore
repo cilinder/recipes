@@ -137,4 +137,6 @@ media
 # Typescript
 frontend/node_modules
 
-
+# Django things we don't want to push
+media
+static
