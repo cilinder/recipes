@@ -10,20 +10,24 @@ Install requirements using
 pip install Django Pillow
 ```
 
-npm
+Need [npm](https://www.npmjs.com/) installed. The best way to manage npm versions is with [nvm](https://github.com/nvm-sh/nvm).
+Once you've installed npm you can install the frontend packages.
 ```
-cd frontend
-npm install
+cd frontend; npm install;
 ```
 
-## Build
+## Run app for development
+
+First you need to create the [tailwind css](https://tailwindcss.com/) files.
+
+## Build static files
 
 Compile typescript to js
 ```
 npx tsc
 ```
 
-When changing static files? run
+When changing static files run
 ```
 python manage.py collectstatic
 ```
