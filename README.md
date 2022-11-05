@@ -1,5 +1,7 @@
 # recipes
-A website for recipes
+A website for recipes.
+
+The live version is available at https://recipes.si
 
 ## Requirements
 
@@ -19,6 +21,8 @@ cd frontend; npm install;
 ## Run app for development
 
 First you need to create the [tailwind css](https://tailwindcss.com/) files.
+
+TODO
 
 ## Build static files
 
