@@ -2,7 +2,7 @@
 
 {% block content %}
 <h2 class="text-5xl font-bold text-center font-serif mb-6">Create a new recipe</h2>
-<div class="grid grid-cols-1 lg:grid-cols-2 mx-auto lg:w-2/3">
+<div class="grid grid-cols-1 lg:grid-cols-1 mx-auto lg:w-2/3">
   <div class="lg:w-96 m-4">
     <h3 class="text-3xl mb-4">Details</h3>
     <form action="new_recipe/save" method="post" enctype="multipart/form-data">
@@ -12,9 +12,38 @@
         <input class="w-full shadow" type="text" name="recipe_name"><br>
         <label for="duration">Duration [min]: </label><br>
         <input class="w-full shadow" type="text" name="duration"><br>
-        <label for="duration">Ingredients (one per line)</label><br>
-        <textarea class="w-full shadow" name="ingredients"></textarea><br>
-        <label for="instructions">Instructions</label><br>
+        <label for="duration">Ingredients</label><br>
+        <div class="flex flex-row justify-around mb-2">
+          <div>Name</div>
+          <div>Quantity</div>
+          <div>Unit</div>
+        </div>
+        <div class="my-2 flex flex-row justify-around space-x-4">
+          <input class="shadow" type="text" name="name_new_1">
+          <input class="shadow" type="number" name="quantity_new_1">
+          <input class="shadow border-b-2" type="text" name="unit_new_1">
+        </div>
+        <div class="my-2 flex flex-row justify-around space-x-4">
+          <input class="shadow" type="text" name="name_new_2">
+          <input class="shadow" type="number" name="quantity_new_2">
+          <input class="shadow border-b-2" type="text" name="unit_new_2">
+        </div>
+        <div class="my-2 flex flex-row justify-around space-x-4">
+          <input class="shadow" type="text" name="name_new_3">
+          <input class="shadow" type="number" name="quantity_new_3">
+          <input class="shadow border-b-2" type="text" name="unit_new_3">
+        </div>
+        <div class="my-2 flex flex-row justify-around space-x-4">
+          <input class="shadow" type="text" name="name_new_4">
+          <input class="shadow" type="number" name="quantity_new_4">
+          <input class="shadow border-b-2" type="text" name="unit_new_4">
+        </div>
+        <div class="my-2 flex flex-row justify-around space-x-4">
+          <input class="shadow" type="text" name="name_new_5">
+          <input class="shadow" type="number" name="quantity_new_5">
+          <input class="shadow border-b-2" type="text" name="unit_new_5">
+        </div>
+        <label for="instructions">Instructions (one per line)</label><br>
         <textarea class="w-full shadow" name="instructions"></textarea><br>
         {% if img_obj %}  
           <input type="hidden" name="image" value={{img_obj.id}}><br>

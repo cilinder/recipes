@@ -11,17 +11,14 @@ class UploadImage(models.Model):
 
 class Recipe(models.Model):
     recipe_name = models.CharField(max_length=100)
-    esstimated_duration_minutes = models.IntegerField('duration', default=0)
-    # ingredients = models.ForeignKey
-    # ingredients = models.TextField()
-    instructions = models.TextField()
+    duration = models.IntegerField('duration', default=0)
     image = models.ForeignKey(UploadImage, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.recipe_name
 
     def isFast(self):
-        return self.esstimated_duration_minutes <= 15
+        return self.duration <= 15
 
 class Ingredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
@@ -31,3 +28,10 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.quantity} {self.unit})"
+
+class Instruction(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    text = models.TextField()
+
+    def __str__(self):
+        return self.text
