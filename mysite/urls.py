@@ -20,9 +20,10 @@ from django.conf.urls.static import static
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='/recipes')),
+    path('', include('recipes.urls')),
     path('recipes/', include('recipes.urls')),
     path("admin/", admin.site.urls),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
 if settings.DEBUG:  

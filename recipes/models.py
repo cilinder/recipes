@@ -10,18 +10,17 @@ class UploadImage(models.Model):
         return self.caption
 
 class Recipe(models.Model):
-    recipe_name = models.CharField(max_length=100)
-    esstimated_duration_minutes = models.IntegerField('duration', default=0)
-    # ingredients = models.ForeignKey
-    # ingredients = models.TextField()
+    owner = models.ForeignKey('auth.User', related_name='recipes', on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    duration = models.IntegerField('duration', default=0)
     instructions = models.TextField()
     image = models.ForeignKey(UploadImage, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.recipe_name
+        return self.name
 
     def isFast(self):
-        return self.esstimated_duration_minutes <= 15
+        return self.duration <= 15
 
 class Ingredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)

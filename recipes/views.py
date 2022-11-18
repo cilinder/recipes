@@ -1,9 +1,20 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render  
-from .forms import UserImage  
-from .models import Ingredient, UploadImage  
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
 
-from .models import Recipe
+from rest_framework import mixins
+from rest_framework import generics
+from rest_framework import permissions
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+
+from recipes.permissions import IsOwnerOrReadOnly
+
+from .forms import UserImage  
+from .models import Ingredient, UploadImage, Recipe
+from .serializers import RecipeSerializer, UserSerializer
 
 def index(request):
     recipes = Recipe.objects.all()
@@ -32,16 +43,16 @@ def save_recipe(request):
     if ("image" in data):
         image = UploadImage.objects.get(pk=data["image"])
         recipe = Recipe(
-            recipe_name=data["recipe_name"],
-            esstimated_duration_minutes=data["duration"],
+            name=data["name"],
+            duration=data["duration"],
             ingredients=", ".join(data["ingredients"].split("\n")),
             instructions=data["instructions"],
             image=image
         )
     else:
         recipe = Recipe(
-            recipe_name=data["recipe_name"],
-            esstimated_duration_minutes=data["duration"],
+            name=data["name"],
+            duration=data["duration"],
             ingredients=", ".join(data["ingredients"].split("\n")),
             instructions=data["instructions"],
         )
@@ -71,8 +82,8 @@ def edit_recipe(request, recipe_id):
 def update_recipe(request, recipe_id):
     data = request.POST
     recipe = Recipe.objects.get(pk=recipe_id)
-    recipe.recipe_name=data["recipe_name"]
-    recipe.esstimated_duration_minutes=data["duration"]
+    recipe.name=data["name"]
+    recipe.duration=data["duration"]
     # ingredients = recipe.ingredient_set.all()
     print(data.keys())
     ingredient_ids = [k.split("_")[-1] for k in data if "ing_name" in k]
@@ -113,4 +124,36 @@ def image_request(request):
     else:  
         form = UserImage()  
   
-    return render(request, 'recipes/image_form.html', {'form': form})  
+    return render(request, 'recipes/image_form.html', {'form': form})
+
+class RecipeList(generics.ListCreateAPIView):
+    """
+    List all recipes, or create a new snippet.
+    """
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
+
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'users': reverse('user-list', request=request, format=format),
+        'recipes': reverse('recipe-list', request=request, format=format)
+    })

@@ -8,8 +8,8 @@
     <form action="new_recipe/save" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <fieldset>
-        <label for="recipe_name">Recipe name: </label><br>
-        <input class="w-full shadow" type="text" name="recipe_name"><br>
+        <label for="name">Recipe name: </label><br>
+        <input class="w-full shadow" type="text" name="name"><br>
         <label for="duration">Duration [min]: </label><br>
         <input class="w-full shadow" type="text" name="duration"><br>
         <label for="duration">Ingredients (one per line)</label><br>
