@@ -24,7 +24,7 @@ def index(request):
 def detail(request, recipe_id):
     recipe = Recipe.objects.get(pk=recipe_id)
     # ingredients = recipe.ingredients.split(', ')
-    context = {'recipe': recipe, 'ingredients': recipe.ingredient_set.all()}
+    context = {'recipe': recipe, 'ingredients': recipe.ingredient_set.all(), 'instructions': recipe.instruction_set.all()}
     # context = {'recipe': recipe}
     return render(request, 'recipes/detail.html', context)
 
@@ -57,6 +57,12 @@ def save_recipe(request):
             instructions=data["instructions"],
         )
     recipe.save()
+    for i in range(1,6):
+        if f"name_new_{i}" in data:
+            print(data[f"name_new_{i}"])
+        if f"name_new_{i}" in data and len(data[f"name_new_{i}"]) > 0:
+            new_ingredient = Ingredient(name=data[f"name_new_{i}"], quantity=data[f"quantity_new_{i}"], unit=data[f"unit_new_{i}"], recipe=recipe)
+            new_ingredient.save()
     return HttpResponseRedirect("/recipes")
 
 def delete_recipe(request, recipe_id):

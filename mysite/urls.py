@@ -19,6 +19,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
 
+from django.contrib.auth.models import User
+from rest_framework import routers, serializers, viewsets
+
 urlpatterns = [
     path('', include('recipes.urls')),
     path('recipes/', include('recipes.urls')),
