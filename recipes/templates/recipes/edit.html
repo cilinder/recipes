@@ -33,7 +33,7 @@
         </div>
         <!-- <textarea name="ingredients", rows=5, cols=50>{{ recipe.ingredients }}</textarea><br> -->
         <label for="instructions">Instructions</label><br>
-        <textarea class="w-full shadow" name="instructions">{{ recipe.instructions }}</textarea><br>
+        <textarea class="w-full shadow" name="instructions">{{ instructions }}</textarea><br>
         {% if img_obj %}  
           <input type="hidden" name="image" value={{img_obj.id}}><br>
         {% endif %}

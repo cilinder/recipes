@@ -13,7 +13,7 @@ from rest_framework.reverse import reverse
 from recipes.permissions import IsOwnerOrReadOnly
 
 from .forms import UserImage  
-from .models import Ingredient, UploadImage, Recipe
+from .models import Ingredient, UploadImage, Recipe, Instruction
 from .serializers import RecipeSerializer, UserSerializer
 
 def index(request):
@@ -23,8 +23,7 @@ def index(request):
 
 def detail(request, recipe_id):
     recipe = Recipe.objects.get(pk=recipe_id)
-    # ingredients = recipe.ingredients.split(', ')
-    context = {'recipe': recipe, 'ingredients': recipe.ingredient_set.all(), 'instructions': recipe.instructions.split(", ")}
+    context = {'recipe': recipe, 'ingredients': recipe.ingredient_set.all(), 'instructions': recipe.instruction_set.all()}
     return render(request, 'recipes/detail.html', context)
 
 def new_recipe(request):
@@ -42,40 +41,46 @@ def save_recipe(request):
     if ("image" in data):
         image = UploadImage.objects.get(pk=data["image"])
         recipe = Recipe(
+            owner=request.user,
             name=data["name"],
             duration=data["duration"],
-            instructions=", ".join(data["instructions"].split("\n")),
-            image=image
+            image=image,
         )
     else:
         recipe = Recipe(
+            owner=request.user,
             name=data["name"],
             duration=data["duration"],
-            instructions=", ".join(data["instructions"].split("\n")),
         )
     recipe.save()
     for i in range(1,6):
+        if f"name_new_{i}" in data:
+            print(data[f"name_new_{i}"])
         if f"name_new_{i}" in data and len(data[f"name_new_{i}"]) > 0:
             new_ingredient = Ingredient(name=data[f"name_new_{i}"], quantity=data[f"quantity_new_{i}"], unit=data[f"unit_new_{i}"], recipe=recipe)
             new_ingredient.save()
+    for line in data["instructions"].split("\n"):
+        instruction = Instruction(recipe=recipe, text=line)
+        instruction.save()
     return HttpResponseRedirect("/recipes")
 
 def delete_recipe(request, recipe_id):
     recipe = Recipe.objects.get(pk=recipe_id)
     recipe.delete()
-    # return render(request, 'recipes/index.html', {'recipes': Recipe.objects.all()})
     return HttpResponseRedirect("/recipes")
 
 def edit_recipe(request, recipe_id):
     recipe = Recipe.objects.get(pk=recipe_id)
     ingredients = recipe.ingredient_set.all()
+    instructions = ", ".join(list(recipe.instruction_set.all()))
     if request.method == 'POST':
+        print("HERE editing")
         form = UserImage(request.POST, request.FILES)
         form.save()
         img_object = form.instance
-        return render(request, 'recipes/edit.html', {'recipe': recipe, 'form': form, 'img_obj': img_object, 'ingredients': ingredients})  
+        return render(request, 'recipes/edit.html', {'recipe': recipe, 'form': form, 'img_obj': img_object, 'ingredients': ingredients, 'instructions': instructions})  
     form = UserImage()
-    context = {'recipe': recipe, 'form': form, 'ingredients': ingredients}
+    context = {'recipe': recipe, 'form': form, 'ingredients': ingredients, 'instructions': instructions}
     return render(request, 'recipes/edit.html', context)
 
 def update_recipe(request, recipe_id):
@@ -83,6 +88,8 @@ def update_recipe(request, recipe_id):
     recipe = Recipe.objects.get(pk=recipe_id)
     recipe.name=data["name"]
     recipe.duration=data["duration"]
+    # ingredients = recipe.ingredient_set.all()
+    print(data.keys())
     ingredient_ids = [k.split("_")[-1] for k in data if "ing_name" in k]
     for ing_id in ingredient_ids:
         ing_name = data[f"ing_name_{ing_id}"]
@@ -102,7 +109,9 @@ def update_recipe(request, recipe_id):
         print("Saving new ingredient")
         new_ingredient.save()
 
-    recipe.instructions=data["instructions"]
+    for line in data["instructions"].split("\n"):
+        instruction = Instruction(recipe=recipe, text=line)
+        instruction.save()
     if "image" in data:
         image = UploadImage.objects.get(pk=data["image"])
         recipe.image=image

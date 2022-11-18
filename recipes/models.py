@@ -13,7 +13,6 @@ class Recipe(models.Model):
     owner = models.ForeignKey('auth.User', related_name='recipes', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     duration = models.IntegerField('duration', default=0)
-    instructions = models.TextField()
     image = models.ForeignKey(UploadImage, on_delete=models.CASCADE, null=True)
 
     def __str__(self):

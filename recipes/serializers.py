@@ -11,10 +11,11 @@ class IngredientSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     ingredient_set = IngredientSerializer(many=True, read_only=True)
+    instruction_set = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Recipe
-        fields = ['owner', 'name', 'duration', 'instructions', 'ingredient_set']
+        fields = ['owner', 'name', 'duration', 'instruction_set', 'ingredient_set']
 
 class UserSerializer(serializers.ModelSerializer):
     recipes = serializers.HyperlinkedRelatedField(many=True, view_name='recipe-detail', read_only=True)
