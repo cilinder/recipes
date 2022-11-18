@@ -24,8 +24,7 @@ def index(request):
 def detail(request, recipe_id):
     recipe = Recipe.objects.get(pk=recipe_id)
     # ingredients = recipe.ingredients.split(', ')
-    context = {'recipe': recipe, 'ingredients': recipe.ingredient_set.all(), 'instructions': recipe.instruction_set.all()}
-    # context = {'recipe': recipe}
+    context = {'recipe': recipe, 'ingredients': recipe.ingredient_set.all(), 'instructions': recipe.instructions.split(", ")}
     return render(request, 'recipes/detail.html', context)
 
 def new_recipe(request):
@@ -45,21 +44,17 @@ def save_recipe(request):
         recipe = Recipe(
             name=data["name"],
             duration=data["duration"],
-            ingredients=", ".join(data["ingredients"].split("\n")),
-            instructions=data["instructions"],
+            instructions=", ".join(data["instructions"].split("\n")),
             image=image
         )
     else:
         recipe = Recipe(
             name=data["name"],
             duration=data["duration"],
-            ingredients=", ".join(data["ingredients"].split("\n")),
-            instructions=data["instructions"],
+            instructions=", ".join(data["instructions"].split("\n")),
         )
     recipe.save()
     for i in range(1,6):
-        if f"name_new_{i}" in data:
-            print(data[f"name_new_{i}"])
         if f"name_new_{i}" in data and len(data[f"name_new_{i}"]) > 0:
             new_ingredient = Ingredient(name=data[f"name_new_{i}"], quantity=data[f"quantity_new_{i}"], unit=data[f"unit_new_{i}"], recipe=recipe)
             new_ingredient.save()
@@ -74,9 +69,7 @@ def delete_recipe(request, recipe_id):
 def edit_recipe(request, recipe_id):
     recipe = Recipe.objects.get(pk=recipe_id)
     ingredients = recipe.ingredient_set.all()
-    print(ingredients)
     if request.method == 'POST':
-        print("HERE editing")
         form = UserImage(request.POST, request.FILES)
         form.save()
         img_object = form.instance
@@ -90,8 +83,6 @@ def update_recipe(request, recipe_id):
     recipe = Recipe.objects.get(pk=recipe_id)
     recipe.name=data["name"]
     recipe.duration=data["duration"]
-    # ingredients = recipe.ingredient_set.all()
-    print(data.keys())
     ingredient_ids = [k.split("_")[-1] for k in data if "ing_name" in k]
     for ing_id in ingredient_ids:
         ing_name = data[f"ing_name_{ing_id}"]
