@@ -9,6 +9,7 @@ from rest_framework import permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from recipes.permissions import IsOwnerOrReadOnly
 
@@ -145,6 +146,7 @@ class RecipeList(generics.ListCreateAPIView):
 
 class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    parser_classes = (MultiPartParser, FormParser)
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
 

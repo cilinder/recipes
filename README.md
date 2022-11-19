@@ -9,7 +9,7 @@ Python3:
 Install requirements using
 
 ```
-pip install Django Pillow
+pip install Django Pillow djangorestframework httpie django-cors-headers pyyaml uritemplate markdown django-filter
 ```
 
 Need [npm](https://www.npmjs.com/) installed. The best way to manage npm versions is with [nvm](https://github.com/nvm-sh/nvm).
