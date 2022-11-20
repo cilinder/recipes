@@ -281,17 +281,12 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
             },
             "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Recipe"
-              }
-            },
-            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
@@ -330,17 +325,12 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
             },
             "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Recipe"
-              }
-            },
-            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
@@ -452,17 +442,12 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
             },
             "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Recipe"
-              }
-            },
-            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
@@ -510,17 +495,12 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
             },
             "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Recipe"
-              }
-            },
-            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
@@ -1013,17 +993,12 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
             },
             "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Recipe"
-              }
-            },
-            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
@@ -1062,17 +1037,12 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
             },
             "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Recipe"
-              }
-            },
-            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
@@ -1184,17 +1154,12 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
             },
             "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Recipe"
-              }
-            },
-            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
@@ -1242,17 +1207,12 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
             },
             "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Recipe"
-              }
-            },
-            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Recipe"
               }
@@ -1475,6 +1435,10 @@
       "Recipe": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "integer",
+            "readOnly": true
+          },
           "owner": {
             "type": "string",
             "readOnly": true
@@ -1514,13 +1478,17 @@
                 "quantity",
                 "unit"
               ]
-            },
-            "readOnly": true
+            }
+          },
+          "image": {
+            "type": "string",
+            "format": "binary"
           }
         },
         "required": [
           "name",
-          "instruction_set"
+          "instruction_set",
+          "ingredient_set"
         ]
       },
       "User": {

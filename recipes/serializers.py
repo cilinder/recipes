@@ -10,7 +10,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    ingredient_set = IngredientSerializer(many=True, read_only=True)
+    ingredient_set = IngredientSerializer(many=True)
     instruction_set = serializers.StringRelatedField(many=True)
     image = serializers.ImageField(required=False)
 
