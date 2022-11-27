@@ -10,12 +10,19 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.parsers import JSONParser, FileUploadParser
+
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from recipes.permissions import IsOwnerOrReadOnly
-
 from .forms import UserImage  
 from .models import Ingredient, UploadImage, Recipe, Instruction
 from .serializers import RecipeSerializer, UserSerializer
+from .authentications import BearerAuthentication
+
+import json
 
 def index(request):
     recipes = Recipe.objects.all()
@@ -133,13 +140,46 @@ def image_request(request):
   
     return render(request, 'recipes/image_form.html', {'form': form})
 
-class RecipeList(generics.ListCreateAPIView):
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'users': reverse('user-list', request=request, format=format),
+        'recipes': reverse('recipe-list', request=request, format=format),
+    })
+
+class RecipeList(APIView):
     """
     List all recipes, or create a new snippet.
     """
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    # authentication_classes = [BearerAuthentication]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    parser_classes = [FormParser, MultiPartParser, JSONParser]
+
+    def get(self, request, *args, **kwargs):
+        recipes = Recipe.objects.all()
+        serializer = RecipeSerializer(recipes, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        ingredients = json.loads(request.data["ingredient_set"])
+        instructions = json.loads(request.data["instruction_set"])
+        data = request.data
+        recipe_serializer = RecipeSerializer(data={
+            'name': data['name'] ,
+            'duration': data['duration'],
+            'instruction_set': instructions,
+            'ingredient_set': ingredients,
+            'image': data['image'],
+        })
+        if recipe_serializer.is_valid():
+            user = User.objects.get(pk=1)
+            recipe_serializer.save(owner=user)
+            return Response(recipe_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print('error', recipe_serializer.errors)
+            return Response(recipe_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -158,10 +198,3 @@ class UserList(generics.ListAPIView):
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'users': reverse('user-list', request=request, format=format),
-        'recipes': reverse('recipe-list', request=request, format=format)
-    })
