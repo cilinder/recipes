@@ -17,7 +17,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     ingredient_set = IngredientSerializer(many=True, required=False)
     instruction_set = InstructionSerializer(many=True, required=False)
-    image = serializers.ImageField(required=False)
+    image = serializers.ImageField(required=False, use_url=True)
 
     class Meta:
         model = Recipe

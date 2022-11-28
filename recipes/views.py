@@ -46,17 +46,18 @@ def new_recipe(request):
 
 def save_recipe(request):
     data = request.POST
+    user = User.objects.get(pk=1)
     if ("image" in data):
         image = UploadImage.objects.get(pk=data["image"])
         recipe = Recipe(
-            owner=request.user,
+            owner=user,
             name=data["name"],
             duration=data["duration"],
             image=image,
         )
     else:
         recipe = Recipe(
-            owner=request.user,
+            owner=user,
             name=data["name"],
             duration=data["duration"],
         )
@@ -135,7 +136,7 @@ def image_request(request):
             img_object = form.instance  
               
             return render(request, 'recipes/image_form.html', {'form': form, 'img_obj': img_object})  
-    else:  
+    else:
         form = UserImage()  
   
     return render(request, 'recipes/image_form.html', {'form': form})
@@ -166,13 +167,21 @@ class RecipeList(APIView):
         ingredients = json.loads(request.data["ingredient_set"])
         instructions = json.loads(request.data["instruction_set"])
         data = request.data
-        recipe_serializer = RecipeSerializer(data={
-            'name': data['name'] ,
-            'duration': data['duration'],
-            'instruction_set': instructions,
-            'ingredient_set': ingredients,
-            'image': data['image'],
-        })
+        if 'image' in data:
+            recipe_serializer = RecipeSerializer(data={
+                'name': data['name'] ,
+                'duration': data['duration'],
+                'instruction_set': instructions,
+                'ingredient_set': ingredients,
+                'image': data['image'],
+            })
+        else:
+            recipe_serializer = RecipeSerializer(data={
+                'name': data['name'] ,
+                'duration': data['duration'],
+                'instruction_set': instructions,
+                'ingredient_set': ingredients,
+            })
         if recipe_serializer.is_valid():
             user = User.objects.get(pk=1)
             recipe_serializer.save(owner=user)
@@ -185,7 +194,7 @@ class RecipeList(APIView):
         serializer.save(owner=self.request.user)
 
 class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     parser_classes = (MultiPartParser, FormParser)
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
